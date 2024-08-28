@@ -1,39 +1,59 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+[![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://github.com/tenhobi/effective_dart) 
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Use this package to display tables in your application
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+## Setup
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Add ```flutter_table``` to your ```pubspec.yaml``` file.
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+## How to use
 
 ```dart
-const like = 'sample';
+ FlutterTable<MyData>(
+    tableDefinition: TableDefinition<MyData>(
+        title: 'My Table',
+        columns: [
+        TableColumn<MyData>(
+            name: 'Title',
+            size: 1,
+            itemBuilder: (context, item) => Text(
+            item?.data['Title'],
+            ),
+        ),
+        TableColumn<MyData>(
+            name: 'Size',
+            size: 1,
+            itemBuilder: (context, item) {
+            return Text(
+                item?.data['Size'],
+            );
+            },
+        ),
+        ],
+    ),
+    data: data,
+),
+``` 
+
+Make sure to define a class that extends ```TableItemModel``` like this
+```dart
+class MyData extends TableItemModel {
+  MyData({
+    required super.data,
+    super.onTap,
+  });
+}
+
 ```
 
-## Additional information
+## Issues
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Please file any issues, bugs or feature request as an issue on our [GitHub](https://github.com/Iconica-Development/flutter_table) page. Commercial support is available if you need help with integration with your app or services. You can contact us at [support@iconica.nl](mailto:support@iconica.nl).
+
+## Want to contribute
+
+If you would like to contribute to the plugin (e.g. by improving the documentation, solving a bug or adding a cool new feature), please carefully review our [contribution guide](../CONTRIBUTING.md) and send us your [pull request](https://github.com/Iconica-Development/flutter_table/pulls).
+
+## Author
+
+This flutter_table package for Flutter is developed by [Iconica](https://iconica.nl). You can contact us at <support@iconica.nl>
