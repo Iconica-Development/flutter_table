@@ -11,6 +11,9 @@ class FlutterTableHeader<T extends TableItemModel> extends StatefulWidget {
     required this.theme,
     required this.sortedDescending,
     required this.onSort,
+    required this.onFilter,
+    required this.isFiltered,
+    required this.resetFilter,
     this.padding = const EdgeInsets.all(16.0),
     super.key,
   });
@@ -19,6 +22,9 @@ class FlutterTableHeader<T extends TableItemModel> extends StatefulWidget {
   final FlutterTableTheme theme;
   final Map<String, dynamic> sortedDescending;
   final Function(TableColumn<T>) onSort;
+  final Function(List<T> items) onFilter;
+  final bool isFiltered;
+  final VoidCallback resetFilter;
 
   final EdgeInsets padding;
 
@@ -61,6 +67,29 @@ class _FlutterTableHeaderState<T extends TableItemModel>
                 margin: const EdgeInsets.only(right: 16),
                 width: 20,
                 height: 20,
+                child: widget.tableDefinition.onFilter != null
+                    ? widget.tableDefinition.filterButton
+                            ?.call(context, widget.tableDefinition.onFilter) ??
+                        InkWell(
+                          onTap: () async {
+                            if (widget.isFiltered) {
+                              widget.resetFilter();
+                              return;
+                            }
+
+                            var result =
+                                await widget.tableDefinition.onFilter?.call();
+
+                            if (result != null) {
+                              widget.onFilter(result);
+                            }
+                          },
+                          child: Icon(
+                            widget.isFiltered ? Icons.close : Icons.filter_list,
+                            color: widget.theme.filterIconColor,
+                          ),
+                        )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),

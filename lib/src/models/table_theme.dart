@@ -19,6 +19,7 @@ class FlutterTableTheme {
     required this.searchIcon,
     required this.searchCloseIcon,
     required this.searchDecoration,
+    required this.filterIconColor,
   });
 
   /// An empty [FlutterTableTheme].
@@ -38,6 +39,7 @@ class FlutterTableTheme {
         searchIcon: Colors.transparent,
         searchCloseIcon: Colors.transparent,
         searchDecoration: InputDecoration(),
+        filterIconColor: Colors.transparent,
       );
 
   /// A standard [FlutterTableTheme].
@@ -68,6 +70,7 @@ class FlutterTableTheme {
             borderRadius: BorderRadius.circular(8.0),
           ),
         ),
+        filterIconColor: Theme.of(context).iconTheme.color ?? Colors.black,
       );
 
   /// Background color of the header.
@@ -115,6 +118,9 @@ class FlutterTableTheme {
   /// Decoration of the search field.
   final InputDecoration searchDecoration;
 
+  /// Icon color of the filter icon.
+  final Color filterIconColor;
+
   /// Copies the current [FlutterTableTheme] with some changes.
   FlutterTableTheme copyWith({
     Color? headerBackgroundColor,
@@ -132,6 +138,7 @@ class FlutterTableTheme {
     Color? searchIcon,
     Color? searchCloseIcon,
     InputDecoration? searchDecoration,
+    Color? filterIconColor,
   }) =>
       FlutterTableTheme(
         headerBackgroundColor:
@@ -151,5 +158,6 @@ class FlutterTableTheme {
         searchIcon: searchIcon ?? this.searchIcon,
         searchCloseIcon: searchCloseIcon ?? this.searchCloseIcon,
         searchDecoration: searchDecoration ?? this.searchDecoration,
+        filterIconColor: filterIconColor ?? this.filterIconColor,
       );
 }
