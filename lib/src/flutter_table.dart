@@ -290,7 +290,7 @@ class _FlutterTableState<T extends TableItemModel>
                     const SizedBox(width: 16.0),
                   ],
                   Text(
-                    currentPage.toString(),
+                    (currentPage + 1).toString(),
                     style: theme!.paginationText,
                   ),
                   const SizedBox(width: 16.0),
