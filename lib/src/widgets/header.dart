@@ -14,6 +14,7 @@ class FlutterTableHeader<T extends TableItemModel> extends StatefulWidget {
     required this.onFilter,
     required this.isFiltered,
     required this.resetFilter,
+    required this.isSearching,
     this.padding = const EdgeInsets.all(16.0),
     super.key,
   });
@@ -25,6 +26,7 @@ class FlutterTableHeader<T extends TableItemModel> extends StatefulWidget {
   final Function(List<T> items) onFilter;
   final bool isFiltered;
   final VoidCallback resetFilter;
+  final bool isSearching;
 
   final EdgeInsets padding;
 
@@ -67,7 +69,8 @@ class _FlutterTableHeaderState<T extends TableItemModel>
                 margin: const EdgeInsets.only(right: 16),
                 width: 20,
                 height: 20,
-                child: widget.tableDefinition.onFilter != null
+                child: widget.tableDefinition.onFilter != null &&
+                        !widget.isSearching
                     ? widget.tableDefinition.filterButton
                             ?.call(context, widget.tableDefinition.onFilter) ??
                         InkWell(

@@ -117,7 +117,7 @@ class _FlutterTableState<T extends TableItemModel>
 
   void search(String query, [List<T>? resetData]) {
     if (resetData != null) {
-      _previousData = List.from(data);
+      _previousData = List.from(resetData);
     }
 
     data = _previousData
@@ -205,6 +205,7 @@ class _FlutterTableState<T extends TableItemModel>
                 ),
         ),
         FlutterTableHeader<T>(
+          isSearching: isSearching,
           onSort: (value) {
             // ignore: avoid_dynamic_calls
             var descending = !(sortedDescending[value.name] ?? false);
@@ -245,6 +246,7 @@ class _FlutterTableState<T extends TableItemModel>
           resetFilter: () {
             isFiltered = false;
             data = List.from(_previousFilteredData);
+            sortedDescending = {};
             _previousFilteredData = [];
             setState(() {});
           },
@@ -280,7 +282,17 @@ class _FlutterTableState<T extends TableItemModel>
                       ),
                       onPressed: () async {
                         currentPage = currentPage - 1;
-                        data = await widget.onPageChanged!(currentPage);
+                        var newData = await widget.onPageChanged!(currentPage);
+                        if (isFiltered &&
+                            widget.tableDefinition.onFilter != null) {
+                          var newFilteredData =
+                              await widget.tableDefinition.onFilter!.call();
+                          filter(newFilteredData);
+                          _previousFilteredData = List.from(newData);
+                        } else {
+                          data = List.from(newData);
+                        }
+
                         search(searchController.text, data);
 
                         setState(() {});
@@ -302,7 +314,17 @@ class _FlutterTableState<T extends TableItemModel>
                     ),
                     onPressed: () async {
                       currentPage = currentPage + 1;
-                      data = await widget.onPageChanged!(currentPage);
+                      var newData = await widget.onPageChanged!(currentPage);
+                      if (isFiltered &&
+                          widget.tableDefinition.onFilter != null) {
+                        var newFilteredData =
+                            await widget.tableDefinition.onFilter!.call();
+                        filter(newFilteredData);
+                        _previousFilteredData = List.from(newData);
+                      } else {
+                        data = List.from(newData);
+                      }
+
                       search(searchController.text, data);
 
                       setState(() {});
