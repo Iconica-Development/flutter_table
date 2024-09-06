@@ -66,10 +66,12 @@ class _FlutterTableState<T extends TableItemModel>
     extends State<FlutterTable<T>> {
   int currentPage = 0;
   bool isSearching = false;
+  bool isFiltered = false;
   TextEditingController searchController = TextEditingController();
   FocusNode searchFocusNode = FocusNode();
   late List<T> data;
   List<T> _previousData = [];
+  List<T> _previousFilteredData = [];
   Map<String, dynamic> sortedDescending = <String, dynamic>{};
 
   FlutterTableTheme? theme;
@@ -115,7 +117,7 @@ class _FlutterTableState<T extends TableItemModel>
 
   void search(String query, [List<T>? resetData]) {
     if (resetData != null) {
-      _previousData = List.from(data);
+      _previousData = List.from(resetData);
     }
 
     data = _previousData
@@ -125,6 +127,12 @@ class _FlutterTableState<T extends TableItemModel>
           ),
         )
         .toList();
+  }
+
+  void filter(List<T> filteredItems) {
+    _previousFilteredData = List.from(data);
+    data = filteredItems;
+    setState(() {});
   }
 
   @override
@@ -197,6 +205,7 @@ class _FlutterTableState<T extends TableItemModel>
                 ),
         ),
         FlutterTableHeader<T>(
+          isSearching: isSearching,
           onSort: (value) {
             // ignore: avoid_dynamic_calls
             var descending = !(sortedDescending[value.name] ?? false);
@@ -210,12 +219,38 @@ class _FlutterTableState<T extends TableItemModel>
             };
 
             if (value.onSort != null) {
-              data = value.onSort!.call(descending);
-              search(searchController.text, data);
+              if (isFiltered) {
+                var sortedItems = List.from(value.onSort!.call(descending));
+
+                if (isSearching) {
+                  sortedItems.removeWhere((e) => !_previousData.contains(e));
+                } else {
+                  sortedItems.removeWhere((e) => !data.contains(e));
+                }
+
+                data = List.from(sortedItems);
+                search(searchController.text, data);
+              } else {
+                data = value.onSort!.call(descending);
+                search(searchController.text, data);
+              }
             }
 
             setState(() {});
           },
+          onFilter: (items) {
+            isFiltered = true;
+            filter(items);
+            setState(() {});
+          },
+          resetFilter: () {
+            isFiltered = false;
+            data = List.from(_previousFilteredData);
+            sortedDescending = {};
+            _previousFilteredData = [];
+            setState(() {});
+          },
+          isFiltered: isFiltered,
           sortedDescending: sortedDescending,
           theme: theme!,
           tableDefinition: widget.tableDefinition,
@@ -247,7 +282,17 @@ class _FlutterTableState<T extends TableItemModel>
                       ),
                       onPressed: () async {
                         currentPage = currentPage - 1;
-                        data = await widget.onPageChanged!(currentPage);
+                        var newData = await widget.onPageChanged!(currentPage);
+                        if (isFiltered &&
+                            widget.tableDefinition.onFilter != null) {
+                          var newFilteredData =
+                              await widget.tableDefinition.onFilter!.call();
+                          filter(newFilteredData);
+                          _previousFilteredData = List.from(newData);
+                        } else {
+                          data = List.from(newData);
+                        }
+
                         search(searchController.text, data);
 
                         setState(() {});
@@ -269,7 +314,17 @@ class _FlutterTableState<T extends TableItemModel>
                     ),
                     onPressed: () async {
                       currentPage = currentPage + 1;
-                      data = await widget.onPageChanged!(currentPage);
+                      var newData = await widget.onPageChanged!(currentPage);
+                      if (isFiltered &&
+                          widget.tableDefinition.onFilter != null) {
+                        var newFilteredData =
+                            await widget.tableDefinition.onFilter!.call();
+                        filter(newFilteredData);
+                        _previousFilteredData = List.from(newData);
+                      } else {
+                        data = List.from(newData);
+                      }
+
                       search(searchController.text, data);
 
                       setState(() {});

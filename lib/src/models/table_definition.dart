@@ -14,9 +14,11 @@ class TableDefinition<T extends TableItemModel> {
     this.title,
     this.export,
     this.exportButton,
+    this.filterButton,
     this.paginationButtons,
     this.searchable = false,
     this.onSearch,
+    this.onFilter,
     this.sortOnMultipleColumns = false,
     this.tableHeaderPadding = const EdgeInsets.all(16.0),
     this.tableRowPadding = const EdgeInsets.all(16.0),
@@ -41,6 +43,11 @@ class TableDefinition<T extends TableItemModel> {
   /// Whether the table is searchable. Defaults to false.
   final bool searchable;
 
+  /// Function that returns a list of items based on the applied filters.
+  /// Make sure to define generic type [T] as a subclass of [TableItemModel].
+  /// If null, the filter button is not displayed.
+  final Future<List<T>> Function()? onFilter;
+
   /// Function that returns a list of items based on a search query.
   /// Make sure to define generic type [T] as a subclass of [TableItemModel].
   final List<T> Function(String query)? onSearch;
@@ -52,6 +59,13 @@ class TableDefinition<T extends TableItemModel> {
   /// There is a default export button if this is null.
   final Widget Function(BuildContext context, void Function(List<T>) export)?
       exportButton;
+
+  /// Widget that displays a filter button.
+  /// There is a default filter button if this is null.
+  final Widget Function(
+    BuildContext context,
+    Future<List<T>> Function()? onFilter,
+  )? filterButton;
 
   /// Widget that displays pagination buttons.
   /// There is a default pagination button if this is null.
