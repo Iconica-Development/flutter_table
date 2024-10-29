@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: FlutterTable<MyData>(
                 tableDefinition: TableDefinition<MyData>(
-                  title: 'My Table',
+                  title: const Text('My Table'),
                   columns: [
                     TableColumn<MyData>(
                       name: 'Title',

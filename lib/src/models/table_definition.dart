@@ -38,7 +38,7 @@ class TableDefinition<T extends TableItemModel> {
   final EdgeInsets tableRowPadding;
 
   /// Title of the table. Defaults to null. If null, the title is not displayed.
-  final String? title;
+  final Widget? title;
 
   /// Whether the table is searchable. Defaults to false.
   final bool searchable;

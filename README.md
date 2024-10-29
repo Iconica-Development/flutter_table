@@ -11,7 +11,7 @@ Add ```flutter_table``` to your ```pubspec.yaml``` file.
 ```dart
  FlutterTable<MyData>(
     tableDefinition: TableDefinition<MyData>(
-        title: 'My Table',
+        title: Text('My Table'),
         columns: [
         TableColumn<MyData>(
             name: 'Title',

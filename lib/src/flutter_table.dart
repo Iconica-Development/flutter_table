@@ -173,9 +173,9 @@ class _FlutterTableState<T extends TableItemModel>
                 )
               : Row(
                   children: [
-                    Text(
-                      widget.tableDefinition.title ?? "",
-                    ),
+                    if (widget.tableDefinition.title != null) ...[
+                      widget.tableDefinition.title!,
+                    ],
                     const Spacer(),
                     if (widget.tableDefinition.export != null) ...[
                       widget.tableDefinition.exportButton?.call(
