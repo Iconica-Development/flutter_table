@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 /// [TableColumn] is a class that defines the structure of a column in a table.
 /// Make sure to define generic type [T] as a subclass of [TableItemModel].
 class TableColumn<T> {
-  /// [TableColumn] is a class that defines the structure 
+  /// [TableColumn] is a class that defines the structure
   /// of a column in a table.
   /// Make sure to define generic type [T] as a subclass of [TableItemModel].
   TableColumn({
